@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Gambling</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #222;
+            color: white;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .result {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .animate {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Game Gambling</h1>
+        <p>Saldo: <span id="saldo">Rp 10,000</span></p>
+        <input type="number" id="taruhan" placeholder="Masukkan taruhan" min="1">
+        <br>
+        <button onclick="mainkan('genap')">Pilih Genap</button>
+        <button onclick="mainkan('ganjil')">Pilih Ganjil</button>
+        <p class="result" id="result"></p>
+    </div>
+
+    <script>
+        let saldo = 10000;
+
+        function formatRupiah(angka) {
+            return "Rp " + angka.toLocaleString("id-ID");
+        }
+
+        function mainkan(pilihan) {
+            let taruhan = parseInt(document.getElementById("taruhan").value);
+            if (isNaN(taruhan) || taruhan <= 0) {
+                alert("Masukkan jumlah taruhan yang valid!");
+                return;
+            }
+            if (taruhan > saldo) {
+                alert("Saldo tidak cukup!");
+                return;
+            }
+            
+            let resultText = document.getElementById("result");
+            resultText.innerHTML = "Mengundi...";
+            resultText.classList.add("animate");
+
+            setTimeout(() => {
+                let angkaAcak = Math.floor(Math.random() * 10) + 1;
+                let hasil = angkaAcak % 2 === 0 ? "genap" : "ganjil";
+                
+                if (pilihan === hasil) {
+                    saldo += taruhan * 2;
+                    alert(`Selamat! Angka ${angkaAcak}, Anda menang!`);
+                } else {
+                    saldo -= taruhan;
+                    alert(`Maaf! Angka ${angkaAcak}, Anda kalah!`);
+                }
+                
+                document.getElementById("saldo").innerText = formatRupiah(saldo);
+                resultText.innerHTML = `Angka yang keluar: ${angkaAcak} (${hasil})`;
+                resultText.classList.remove("animate");
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
